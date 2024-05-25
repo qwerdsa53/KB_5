@@ -1,6 +1,4 @@
 #include "CL_screen.h"
-#include <iomanip>
-#include <bitset>
 CL_screen::CL_screen(CL_base* p_head_obj, string s_name) : CL_base(p_head_obj, s_name) {}
 
 //int CL_screen::get_class_num() {
@@ -18,6 +16,8 @@ CL_screen::CL_screen(CL_base* p_head_obj, string s_name) : CL_base(p_head_obj, s
 
 void CL_screen::handler_screen_from_all(string msg) {
 	ostringstream ss;
+	if (msg == "Off")
+		return;
 	if (msg == "Division by zero") {
 		cout << get_head()->s_expression << "     Division by zero\n";
 		get_head()->s_expression = "0";

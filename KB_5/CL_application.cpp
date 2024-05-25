@@ -1,6 +1,6 @@
 #include "CL_application.h"
-#include "CL_base.h"
 #include <stack>
+#include "CL_base.h"
 CL_application::CL_application(CL_base* p_head_obj) :CL_base(p_head_obj) {}
 void CL_application::build_tree_obj() {
 	CL_base* p_sub = this;
@@ -13,31 +13,30 @@ void CL_application::build_tree_obj() {
 	new CL_screen(this, "Screen");
 	new CL_shift(this, "Shift");
 
-	this->SetConnection(SIGNAL_D(CL_application::signal_app_to_reader),
+	this->set_connection(SIGNAL_D(CL_application::signal_app_to_reader),
 		get_sub_obj("Reader"),
 		HANDLER_D(CL_reader::handler_reader_from_app));
-	get_sub_obj("Reader")->SetConnection(SIGNAL_D(CL_reader::signal_reader_to_all),
+	get_sub_obj("Reader")->set_connection(SIGNAL_D(CL_reader::signal_reader_to_all),
 		this,
 		HANDLER_D(CL_application::handler_app_from_reader));
-	get_sub_obj("Reader")->SetConnection(SIGNAL_D(CL_reader::signal_reader_to_all),
+	get_sub_obj("Reader")->set_connection(SIGNAL_D(CL_reader::signal_reader_to_all),
 		get_sub_obj("Cancel"),
 		HANDLER_D(CL_cancel::handler_cancel_from_reader));
-	get_sub_obj("Reader")->SetConnection(SIGNAL_D(CL_reader::signal_reader_to_all),
+	get_sub_obj("Reader")->set_connection(SIGNAL_D(CL_reader::signal_reader_to_all),
 		get_sub_obj("Calc"),
 		HANDLER_D(CL_calc::handler_calc_from_reader));
-	get_sub_obj("Reader")->SetConnection(SIGNAL_D(CL_reader::signal_reader_to_all),
+	get_sub_obj("Reader")->set_connection(SIGNAL_D(CL_reader::signal_reader_to_all),
 		get_sub_obj("Shift"),
 		HANDLER_D(CL_shift::handler_shift_from_reader));
-	get_sub_obj("Shift")->SetConnection(SIGNAL_D(CL_shift::signal_shift_to_screen),
+	get_sub_obj("Shift")->set_connection(SIGNAL_D(CL_shift::signal_shift_to_screen),
 		get_sub_obj("Screen"),
 		HANDLER_D(CL_screen::handler_screen_from_all));
-	get_sub_obj("Calc")->SetConnection(SIGNAL_D(CL_calc::signal_calc_to_screen),
+	get_sub_obj("Calc")->set_connection(SIGNAL_D(CL_calc::signal_calc_to_screen),
 		get_sub_obj("Screen"),
 		HANDLER_D(CL_screen::handler_screen_from_all));
-	get_sub_obj("Reader")->SetConnection(SIGNAL_D(CL_reader::signal_reader_to_all),
+	get_sub_obj("Reader")->set_connection(SIGNAL_D(CL_reader::signal_reader_to_all),
 		get_sub_obj("Screen"),
-		HANDLER_D(CL_screen::handler_screen_from_all));
-	
+		HANDLER_D(CL_screen::handler_screen_from_all));	
 }
 
 void CL_application::signal_app_to_reader(string& msg) {}
@@ -51,7 +50,7 @@ int CL_application::exec_app() {
 
 	string msg;
 	s_cmd = "";
-	//this->turn_on_tree();
+	this->turn_on_tree();
 
 	int i_result = 0;
 	string s_expression = "";
@@ -59,7 +58,7 @@ int CL_application::exec_app() {
 	string s_operand_2 = "";
 
 	while (s_cmd != "Off") {
-		EmitSignal(SIGNAL_D(CL_application::signal_app_to_reader), s_cmd);
+		emit_signal(SIGNAL_D(CL_application::signal_app_to_reader), s_cmd);
 	}
 	return 0;
 }
